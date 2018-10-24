@@ -1,9 +1,7 @@
 package lab;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Spliterator;
+import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -23,8 +21,8 @@ public class App {
      * The method takes a list of names. Returns a string of the form
      * "1. Ivan, 3. Peter ...", only with names on odd indices, respectively.
      *
-     * @param nameList
-     * @return
+     * @param nameList - input names list
+     * @return - formatted string with odd elements
      */
     private static String getOddValuesString(List<String> nameList) {
         return IntStream.range(0, nameList.size())
@@ -37,8 +35,8 @@ public class App {
      * Task 2:
      * The method map list of string to uppercase and then sort descending
      *
-     * @param stringList
-     * @return
+     * @param stringList - input strings list
+     * @return - upper cased list with reverse order sorting
      */
     private static List<String> getUppercaseDescList(List<String> stringList) {
         return stringList.stream()
@@ -52,8 +50,8 @@ public class App {
      * Given and collection = Arrays.asList ("1, 2, 0", "4, 5")
      * From the collection get all the numbers listed, separated by commas from all the elements
      *
-     * @param stringList
-     * @return
+     * @param stringList - input list with numbers strings to split
+     * @return - list after splitting
      */
     private static List<String> getAllTheNumbers(List<String> stringList) {
         return stringList.stream()
@@ -88,15 +86,42 @@ public class App {
      * that alternates elements from the stream first and second, stopping when one of
      * them runs out of elements
      *
-     * @param first
-     * @param second
-     * @param <T>
-     * @return
+     * @param first - first input stream
+     * @param second - second input stream
+     * @param <T> - type
+     * @return alternate stream
      */
     public static <T> Stream<T> zip(Stream<T> first, Stream<T> second){
-        //List<T> firstList = first.collect(Collectors.toList());
-        //List<T> secondList = second.collect(Collectors.toList());
-        return null;
+        Stream.Builder<T> builder = Stream.builder();
+        Iterator<T> firstIterator = first.iterator();
+        second.forEachOrdered(new Consumer<T>() {
+            @Override
+            public void accept(T t) {
+                if(firstIterator.hasNext()){
+                    builder.accept(firstIterator.next());
+                    builder.accept(t);
+                }
+            }
+        });
+        return builder.build();
     }
+
+    /**
+     * Task 6(Optional):
+     * It should be possible to concurrently collect stream results in a single ArrayList,
+     * instead of merging multiple array lists, provided it has been constructed with the
+     * stream's size, since concurrent set operations at disjoint positions are threadsafe.
+     * How can you achieve this?
+     *
+     */
+    public static <T> List<T> concurrentCollect(Stream<List<T>> listStream){
+        List<T> resultList = new ArrayList<>();
+//        final Long size = listStream.flatMap(Collection::stream).spliterator().getExactSizeIfKnown();
+//        if (size != -1L){
+//
+//        }
+        return resultList;
+    }
+
 
 }
